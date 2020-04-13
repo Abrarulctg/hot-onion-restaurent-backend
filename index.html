@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+</head>
+
+<body>
+
+    
+    <h1>My Node and Mongo DB Site</h1>
+    <p id="itemName"></p>
+    <div class="container">
+        <div class="row">
+            <input type="text" class="form-control" id="name" placeholder="Food Name">
+            <input type="text" class="form-control" id="price" placeholder="price">
+            <button class="btn btn-primary" id="addFood"> Add Food  Item</button>
+        </div> <br/>
+        <p style="display: none; color: green;" id="successMessage">
+            <small>Food Added Successfully..!!</small>
+        </p>
+        <ul id="food-list"></ul>
+    </div>
+
+    <script>
+
+        //get data
+        fetch('http://localhost:4100/foods')
+            .then(res => res.json())
+            .then(data => {
+                displayFoods(data);
+            });
+
+
+        function displayFoods(data) {
+            const foodContainer = document.getElementById('food-list');
+            for (let i = 0; i < data.length; i++) {
+                const food = data[i];
+                appendFood(food, foodContainer);
+            }
+        }
+
+        function appendFood(food, foodContainer) {
+            const item = document.createElement('li');
+            item.innerText = `${food.name}:$${food.price}`;
+            foodContainer.appendChild(item);
+        }
+
+
+        //POST data to the server
+        const btnAddFood = document.getElementById('addFood');
+        btnAddFood.addEventListener('click', () => {
+            const name = document.getElementById('name').value;
+            const price = document.getElementById('price').value;
+            const foods = { name, price };
+            console.log(foods);
+            //post
+            fetch('http://localhost:4100/addFood', {
+                method: 'POST',
+                body: JSON.stringify(foods),
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8"
+                }
+            })
+                .then(res => res.json())
+                .then(data => {
+                    console.log(data);
+                    updateFood(data);
+                    //clean
+                    document.getElementById('name').value = '';
+                    document.getElementById('price').value = '';
+
+                    //show success message
+                    const success = document.getElementById('successMessage')
+                    success.style.display = 'block';
+                    setTimeout(() => {
+                        success.style.display = 'none';
+                    }, 5000)
+
+                })
+        })
+
+
+        function updateFood(food) {
+            const foodContainer = document.getElementById('food-list');
+            appendFood(food, foodContainer);
+            document.getElementById('itemName').innerText = food.name;
+        }
+    </script>
+</body>
+
+</html>
