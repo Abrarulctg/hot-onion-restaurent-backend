@@ -28,7 +28,7 @@
     <script>
 
         //get data
-        fetch('http://localhost:4100/foods')
+        fetch('http://localhost:4100/scholarship')
             .then(res => res.json())
             .then(data => {
                 displayFoods(data);
@@ -58,7 +58,7 @@
             const foods = { name, price };
             console.log(foods);
             //post
-            fetch('http://localhost:4100/addFood', {
+            fetch('http://localhost:4100/addScholarship', {
                 method: 'POST',
                 body: JSON.stringify(foods),
                 headers: {
