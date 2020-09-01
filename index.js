@@ -14,11 +14,12 @@ const uri = process.env.DB_PATH;
 
 let client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
-//Get foods data
-app.get('/foods', (req, res) =>{
+
+//Get all Scholarship data
+app.get('/scholarship', (req, res) =>{
     client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
     client.connect(err => {
-        const collection = client.db("onlineFood").collection("foods");
+        const collection = client.db("isfbd").collection("scholarship");
         collection.find().toArray((err, documents) => {
             if (err){
                 console.log(err);
@@ -36,14 +37,14 @@ app.get('/foods', (req, res) =>{
 
 
 
-//Get ID Wise foods data
-app.get('/food/:id', (req, res) =>{
+//Get ID Wise Scholarship data
+app.get('/scholarship/:id', (req, res) =>{
     client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
-    const foodId = Number(req.params.id)
+    const scholarshipId = Number(req.params.id)
 
     client.connect(err => {
-        const collection = client.db("onlineFood").collection("foods");
-        collection.find({id:foodId}).toArray((err, documents) => {
+        const collection = client.db("isfbd").collection("scholarship");
+        collection.find({id:scholarshipId}).toArray((err, documents) => {
             if (err){
                 console.log(err);
                 res.status(500).send({message:err})
@@ -57,14 +58,13 @@ app.get('/food/:id', (req, res) =>{
 });
 
 
-
-//Post
-app.post('/addFood', (req, res) => {
-    const product = req.body;
+//Post Scholarship Data to Database
+app.post('/addScholarship', (req, res) => {
+    const scholarship = req.body;
     
     client.connect(err => {
-        const collection = client.db("onlineFood").collection("foods");
-        collection.insert(product, (err, result) => {
+        const collection = client.db("isfbd").collection("scholarship");
+        collection.insertOne(scholarship, (err, result) => {
             if (err){
                 res.status(500).send({message:err})
             }
@@ -79,23 +79,23 @@ app.post('/addFood', (req, res) => {
 
 
 
-//Post Order
-app.post('/placeOrder', (req, res) => {
-    const product = req.body;
+// //Post Order
+// app.post('/placeOrder', (req, res) => {
+//     const product = req.body;
     
-    client.connect(err => {
-        const collection = client.db("onlineFood").collection("orders");
-        collection.insert(product, (err, result) => {
-            if (err){
-                res.status(500).send({message:err})
-            }
-            else{
-                res.send(result.ops[0]);
-            }
-        });
-        //client.close();
-      });
-});
+//     client.connect(err => {
+//         const collection = client.db("onlineFood").collection("orders");
+//         collection.insert(product, (err, result) => {
+//             if (err){
+//                 res.status(500).send({message:err})
+//             }
+//             else{
+//                 res.send(result.ops[0]);
+//             }
+//         });
+//         //client.close();
+//       });
+// });
 
 const port = process.env.PORT || 4200;
 app.listen(port, () => console.log('Listening to port 4100'))
