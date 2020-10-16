@@ -37,7 +37,7 @@ app.get('/foods', (req, res) =>{
 
 
 //Get ID Wise Food data
-app.get('/foods/:id', (req, res) =>{
+app.get('/food/id', (req, res) =>{
     client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
     const scholarshipId = Number(req.params.id)
 
