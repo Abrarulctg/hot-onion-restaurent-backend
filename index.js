@@ -14,11 +14,11 @@ const uri = process.env.DB_PATH;
 let client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
 
-//Get all Scholarship data
-app.get('/scholarship', (req, res) =>{
+//Get all Food data
+app.get('/foods', (req, res) =>{
     client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
     client.connect(err => {
-        const collection = client.db("isfbd").collection("scholarship");
+        const collection = client.db("onlineFood").collection("foods");
         collection.find().toArray((err, documents) => {
             if (err){
                 console.log(err);
@@ -36,13 +36,13 @@ app.get('/scholarship', (req, res) =>{
 
 
 
-//Get ID Wise Scholarship data
-app.get('/scholarship/:id', (req, res) =>{
+//Get ID Wise Food data
+app.get('/foods/:id', (req, res) =>{
     client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
     const scholarshipId = Number(req.params.id)
 
     client.connect(err => {
-        const collection = client.db("isfbd").collection("scholarship");
+        const collection = client.db("onlineFood").collection("foods");
         collection.find({id:scholarshipId}).toArray((err, documents) => {
             if (err){
                 console.log(err);
@@ -57,12 +57,12 @@ app.get('/scholarship/:id', (req, res) =>{
 });
 
 
-//Post Scholarship Data to Database
-app.post('/addScholarship', (req, res) => {
+//Post Order Data to Database
+app.post('/placeOrder', (req, res) => {
     const scholarship = req.body;
     
     client.connect(err => {
-        const collection = client.db("isfbd").collection("scholarship");
+        const collection = client.db("onlineFood").collection("orders");
         collection.insertOne(scholarship, (err, result) => {
             if (err){
                 res.status(500).send({message:err})
